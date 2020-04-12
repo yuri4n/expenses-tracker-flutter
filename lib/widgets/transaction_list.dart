@@ -5,8 +5,9 @@ import '../models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
+  final Function deleteTx;
 
-  TransactionList(this.transactions);
+  TransactionList(this.transactions, this.deleteTx);
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +34,8 @@ class TransactionList extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 Container(
+                  width: 80,
+                  height: 45,
                   margin: EdgeInsets.symmetric(
                       vertical: 10, horizontal: 20
                   ),
@@ -42,32 +45,43 @@ class TransactionList extends StatelessWidget {
                         .primaryColor, width: 2),
                   ),
                   padding: EdgeInsets.all(10),
-                  child: Text(
-                    '\$${transactions[index].amount.toStringAsFixed(2)}',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Theme
-                          .of(context)
-                          .primaryColor,
+                  child: FittedBox(
+                    child: Text(
+                      '\$${transactions[index].amount.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Theme
+                            .of(context)
+                            .primaryColor,
+                      ),
                     ),
                   ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                        transactions[index].title,
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .title
+                Flexible(
+                  fit: FlexFit.tight,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                            transactions[index].title,
+                            style: Theme
+                                .of(context)
+                                .textTheme
+                                .title
+                        ),
+                        Text(
+                          DateFormat.yMMMEd().format(transactions[index].date),
+                        ),
+                      ],
                     ),
-                    Text(
-                      DateFormat.yMMMEd().format(transactions[index].date),
-                    ),
-                  ],
+                  ),
                 ),
+                IconButton(icon: Icon(Icons.delete), onPressed: () {
+                  deleteTx(transactions[index].id);
+                },)
               ],
             ),
           );
